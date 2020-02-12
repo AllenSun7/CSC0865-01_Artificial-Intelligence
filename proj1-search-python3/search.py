@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+import pysnooper
 
 class SearchProblem:
     """
@@ -61,7 +62,6 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
-
 def tinyMazeSearch(problem):
     """
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
@@ -72,6 +72,7 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+@pysnooper.snoop()
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -90,7 +91,51 @@ def depthFirstSearch(problem):
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    util.raiseNotDefined()
+    from game import Directions
+    s = Directions.SOUTH
+    n = Directions.NORTH
+    w = Directions.WEST
+    e = Directions.EAST
+    my_stack = util.Stack()
+    my_priority = util.PriorityQueue()
+    start_state = problem.getStartState()
+    init_frontier = [i[0] for i in problem.getSuccessors(start_state)]
+    for frontier in init_frontier:
+        my_stack.push(frontier)
+    frontier = my_stack.pop()
+    previous_node = start_state
+    my_priority.update(start_state)
+    count = 0
+    while not problem.isGoalState(frontier):
+        print("frontier: ", frontier)
+        successors_positions = [i[0] for i in problem.getSuccessors(frontier) if i[0]!=previous_node]
+        successors_directions = [i[1] for i in problem.getSuccessors(frontier) if i[0]!=previous_node]
+        print(successors_positions)
+        print(successors_directions)  
+        if successors_positions:
+            for node in successors_positions:
+                my_stack.push(node)
+            print(my_stack.list)
+            previous_node = frontier
+            frontier = my_stack.pop()
+            print(problem.isGoalState(frontier))
+        count +=1
+        if count > 20:
+            break
+
+    print("find soluntion: %s" % str(frontier))
+    
+    return  [s, s, w, s, w, w, s, w]
+
+def successor(nexts):
+    for nexts in successors_positions:
+        if not problem.isGoalState(nexts):
+            successors_positions = [i[0] for i in problem.getSuccessors(nexts)]
+            successors_directions = [i[1] for i in problem.getSuccessors(nexts)]            
+            print(successors_positions)
+            print(successors_directions)
+    return successors_positions, successors_directions 
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
