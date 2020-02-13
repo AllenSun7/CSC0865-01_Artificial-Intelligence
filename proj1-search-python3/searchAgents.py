@@ -40,6 +40,7 @@ from game import Actions
 import util
 import time
 import search
+import pysnooper
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -269,7 +270,6 @@ def euclideanHeuristic(position, problem, info={}):
 class CornersProblem(search.SearchProblem):
     """
     This search problem finds paths through all four corners of a layout.
-
     You must select a suitable state space and successor function
     """
 
@@ -295,14 +295,16 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+        return (self.startingPosition, self.corners)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #util.raiseNotDefined()
+        return len(state[1]) == 0
 
     def getSuccessors(self, state):
         """
@@ -325,7 +327,19 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-
+            print("state successor:", state)
+            x, y = state[0]
+            corners_left = state[1]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if not hitsWall:
+                if (nextx, nexty) in corners_left: 
+                    corners_left = tuple(x for x in corners_left if x != (nextx, nexty))
+                    #corners_left = list(corners_left)
+                    #corners_left = tuple(corners_left)
+                successors.append((((nextx, nexty), corners_left), action, 1))
+            
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
