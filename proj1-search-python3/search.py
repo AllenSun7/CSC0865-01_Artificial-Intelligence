@@ -72,7 +72,6 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-@pysnooper.snoop()
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -88,64 +87,68 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    from game import Directions
-    s = Directions.SOUTH
-    n = Directions.NORTH
-    w = Directions.WEST
-    e = Directions.EAST
+    #last in first out
     my_stack = util.Stack()
-    my_priority = util.PriorityQueue()
+    path = search_path(my_stack, problem)
+    #util.raiseNotDefined()
+    return path
+
+def search_path(my_heap, problem): 
     start_state = problem.getStartState()
-    init_frontier = [i[0] for i in problem.getSuccessors(start_state)]
-    for frontier in init_frontier:
-        my_stack.push(frontier)
-    frontier = my_stack.pop()
-    previous_node = start_state
-    my_priority.update(start_state)
-    count = 0
-    while not problem.isGoalState(frontier):
-        print("frontier: ", frontier)
-        successors_positions = [i[0] for i in problem.getSuccessors(frontier) if i[0]!=previous_node]
-        successors_directions = [i[1] for i in problem.getSuccessors(frontier) if i[0]!=previous_node]
-        print(successors_positions)
-        print(successors_directions)  
-        if successors_positions:
-            for node in successors_positions:
-                my_stack.push(node)
-            print(my_stack.list)
-            previous_node = frontier
-            frontier = my_stack.pop()
-            print(problem.isGoalState(frontier))
-        count +=1
-        if count > 20:
-            break
-
-    print("find soluntion: %s" % str(frontier))
+    my_heap.push((start_state, []))
+    searched_nodes = []
     
-    return  [s, s, w, s, w, w, s, w]
+    while not my_heap.isEmpty():
+        (frontier, path) = my_heap.pop()
+        #if the goal
+        if problem.isGoalState(frontier):
+            break 
 
-def successor(nexts):
-    for nexts in successors_positions:
-        if not problem.isGoalState(nexts):
-            successors_positions = [i[0] for i in problem.getSuccessors(nexts)]
-            successors_directions = [i[1] for i in problem.getSuccessors(nexts)]            
-            print(successors_positions)
-            print(successors_directions)
-    return successors_positions, successors_directions 
+        #explore new node
+        if frontier not in searched_nodes:
+            searched_nodes.append(frontier)
+            for node in problem.getSuccessors(frontier):
+                    new_node = node[0]
+                    new_path = path + [node[1]]
+                    my_heap.push((new_node, new_path))
 
+    return  path
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #first in first out
+    my_queue = util.Queue()
+    path = search_path(my_queue, problem)
+    #util.raiseNotDefined()
+    return path   
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    my_heap = util.PriorityQueue()
+    start_state = problem.getStartState()
+    my_heap.update((start_state, [], 0), 0)
+    searched_nodes = []
+    
+    while not my_heap.isEmpty():
+        (frontier, path, cost) = my_heap.pop()
+        #if the goal
+        if problem.isGoalState(frontier):
+            break 
+
+        #explore new node
+        if frontier not in searched_nodes:
+            searched_nodes.append(frontier)
+            for node in problem.getSuccessors(frontier):
+                    new_node = node[0]
+                    new_path = path + [node[1]]
+                    new_cost = cost + node[2]
+                    my_heap.update((new_node, new_path, new_cost), new_cost)
+
+    #util.raiseNotDefined()
+    return path
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -157,7 +160,33 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
+    my_heap = util.PriorityQueue()
+    start_state = problem.getStartState()
+    g = 0
+    h = heuristic(start_state, problem)
+    f = g + h
+    my_heap.update((start_state, [], g), f)
+    searched_nodes = []
+    
+    while not my_heap.isEmpty():
+        (frontier, path, cost) = my_heap.pop()
+        #if the goal
+        if problem.isGoalState(frontier):
+            break 
+
+        #explore new node
+        if frontier not in searched_nodes:
+            searched_nodes.append(frontier)
+            for node in problem.getSuccessors(frontier):
+                    new_node = node[0]
+                    new_path = path + [node[1]]
+                    new_cost = cost + node[2]
+                    new_heuristic = new_cost + heuristic(new_node, problem)
+                    my_heap.update((new_node, new_path, new_cost), new_heuristic)
+
+    #util.raiseNotDefined()
+    return path
 
 
 # Abbreviations
