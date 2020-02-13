@@ -1,2 +1,7 @@
 # Untracked files:
 sumbission/
+__pycache__/
+
+#.files
+.pyc
+.DS_Store
