@@ -181,12 +181,9 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-                # if trigger score evaluate funtion
-        def evalute_score(state, depth):
-            return state.isWin() or state.isLose() or depth == self.depth
-
         def min_value(state, depth, ghost_index, alpha, beta):
-            if evalute_score(state, depth):
+            # if trigger score evaluate funtion
+            if state.isWin() or state.isLose() or depth == self.depth:
                 return self.evaluationFunction(state)
 
             v = 99999999999999
@@ -204,7 +201,8 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         
         def max_value(state, depth, alpha, beta):
             best_action = None
-            if evalute_score(state, depth):
+            # if trigger score evaluate funtion
+            if state.isWin() or state.isLose() or depth == self.depth:
                 return self.evaluationFunction(state), best_action
             v = -99999999999999
             for action in state.getLegalActions(0):
@@ -212,6 +210,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 #prune 
                 if v > beta:
                     return v, best_action
+                #get the alpha and best action
                 if v > alpha:
                     alpha = v
                     best_action = action
@@ -222,7 +221,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         beta = 99999999999999
         num_ghosts = gameState.getNumAgents()-1
         #get the action with the max score
-        best_action = max_value(gameState, 0, alpha, beta)[1]
+        _, best_action = max_value(gameState, 0, alpha, beta)
 
         return best_action
         #util.raiseNotDefined()
