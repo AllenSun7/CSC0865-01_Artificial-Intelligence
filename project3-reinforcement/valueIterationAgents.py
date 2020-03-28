@@ -77,7 +77,25 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        print("===========================================")
+        print("Q-Value")
+        print("state")
+        print(state)
+        print("self.getValue(state)")
+        print(self.getValue(state))
+        print("action")
+        print(action)
+        print("self.mdp.getTransitionStatesAndProbs(state, action)")
+        print(self.mdp.getTransitionStatesAndProbs(state, action))
+        q_value = 0
+        for next_state, p in self.mdp.getTransitionStatesAndProbs(state, action):
+            print("self.mdp.getReward(state, action, next_state)")
+            print(next_state)
+            print(self.mdp.getReward(state, action, next_state))
+            q_value_next_state = p * (self.mdp.getReward(state, action, next_state) + self.discount*self.getValue(next_state))
+            q_value += q_value_next_state
+        return q_value
+        # util.raiseNotDefined()
 
     def computeActionFromValues(self, state):
         """
@@ -89,7 +107,51 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        print("===========================================")
+        print("V-Value")
+        print("self.values")
+        print(self.values)
+        print("state")
+        print(state)
+        print("self.getValue(state)")
+        print(self.getValue(state))
+        #action = self.getAction(state)
+        print("self.mdp.getStates()")
+        print(self.mdp.getStates())
+        # print(self.mdp.getReward(state, action, nextState))
+        print(self.mdp.isTerminal(state))
+        #return action
+        print("self.mdp.getPossibleActions(state)")
+        print(self.mdp.getPossibleActions(state))
+        if self.mdp.isTerminal(state):
+            print("=========================================")
+            print("=========================================")
+            print("=========================================")
+            print("=========================================")
+            print("=========================================")
+            print("=========================================")
+            print("=========================================")
+            print("=========================================")
+            return None
+        else:
+            actions = self.mdp.getPossibleActions(state)
+            q_values = {}
+            for action in actions:
+                q_value = self.getQValue(state, action)
+                q_values[action] = q_value
+            print("q_value")
+            print(q_values)
+            # return the action with the max value
+            max_action = max(q_values, key=q_values.get)
+            max_v_value = max(q_values.values())
+            print("=============max============")
+            print(max_action)
+            print(max_v_value)
+            self.values[state] = max_v_value
+            print(self.values[state])
+            print(self.values)
+            return max_action
+        # util.raiseNotDefined()
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
