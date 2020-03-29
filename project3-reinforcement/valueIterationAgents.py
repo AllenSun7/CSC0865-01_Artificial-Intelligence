@@ -27,9 +27,9 @@
 
 
 import mdp, util
-
 from learningAgents import ValueEstimationAgent
 import collections
+import copy
 
 class ValueIterationAgent(ValueEstimationAgent):
     """
@@ -62,8 +62,19 @@ class ValueIterationAgent(ValueEstimationAgent):
     def runValueIteration(self):
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
-
-
+        for _ in range(self.iterations):
+            #update values every iteration
+            iteration_values = self.values.copy()
+            for state in self.mdp.getStates():
+                # skip if it is the terminal state
+                if self.mdp.isTerminal(state):
+                    continue
+                # max V(s) = max_{a in actions} Q(s,a)
+                q_values = self.q_values(state)
+                max_q_value = max(q_values.values())
+                iteration_values[state] = max_q_value
+            self.values = iteration_values
+        
     def getValue(self, state):
         """
           Return the value of the state (computed in __init__).
@@ -77,25 +88,14 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        print("===========================================")
-        print("Q-Value")
-        print("state")
-        print(state)
-        print("self.getValue(state)")
-        print(self.getValue(state))
-        print("action")
-        print(action)
-        print("self.mdp.getTransitionStatesAndProbs(state, action)")
-        print(self.mdp.getTransitionStatesAndProbs(state, action))
         q_value = 0
         for next_state, p in self.mdp.getTransitionStatesAndProbs(state, action):
-            print("self.mdp.getReward(state, action, next_state)")
-            print(next_state)
-            print(self.mdp.getReward(state, action, next_state))
+            # Q = sum(T * (R+lambda*V))
             q_value_next_state = p * (self.mdp.getReward(state, action, next_state) + self.discount*self.getValue(next_state))
             q_value += q_value_next_state
         return q_value
         # util.raiseNotDefined()
+
 
     def computeActionFromValues(self, state):
         """
@@ -107,51 +107,24 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-        print("===========================================")
-        print("V-Value")
-        print("self.values")
-        print(self.values)
-        print("state")
-        print(state)
-        print("self.getValue(state)")
-        print(self.getValue(state))
-        #action = self.getAction(state)
-        print("self.mdp.getStates()")
-        print(self.mdp.getStates())
-        # print(self.mdp.getReward(state, action, nextState))
-        print(self.mdp.isTerminal(state))
-        #return action
-        print("self.mdp.getPossibleActions(state)")
-        print(self.mdp.getPossibleActions(state))
-        if self.mdp.isTerminal(state):
-            print("=========================================")
-            print("=========================================")
-            print("=========================================")
-            print("=========================================")
-            print("=========================================")
-            print("=========================================")
-            print("=========================================")
-            print("=========================================")
+        # Q values with actions 
+        q_values = self.q_values(state)
+        # return the action with the max value
+        if len(q_values) == 0:
             return None
-        else:
-            actions = self.mdp.getPossibleActions(state)
-            q_values = {}
-            for action in actions:
-                q_value = self.getQValue(state, action)
-                q_values[action] = q_value
-            print("q_value")
-            print(q_values)
-            # return the action with the max value
-            max_action = max(q_values, key=q_values.get)
-            max_v_value = max(q_values.values())
-            print("=============max============")
-            print(max_action)
-            print(max_v_value)
-            self.values[state] = max_v_value
-            print(self.values[state])
-            print(self.values)
-            return max_action
+        else :
+            return max(q_values, key=q_values.get)
         # util.raiseNotDefined()
+
+    def q_values(self, state):
+        """
+        return a dictonary of q_values with corresponding Q-values and actions
+        """
+        q_values = {}
+        for action in self.mdp.getPossibleActions(state):
+            q_values[action] = self.getQValue(state, action)
+        return q_values
+
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
@@ -192,6 +165,22 @@ class AsynchronousValueIterationAgent(ValueIterationAgent):
 
     def runValueIteration(self):
         "*** YOUR CODE HERE ***"
+
+        for i in range(self.iterations):
+            #update value of certain state 
+            states = self.mdp.getStates()
+            #cycle state
+            state = states[i%len(states)]
+            # skip if it is the terminal state
+            if self.mdp.isTerminal(state):
+                continue
+                # max V(s) = max_{a in actions} Q(s,a)
+            q_values = {}
+            for action in self.mdp.getPossibleActions(state):
+                q_values[action] = self.getQValue(state, action)
+            max_q_value = max(q_values.values())
+            self.values[state] = max_q_value
+    
 
 class PrioritizedSweepingValueIterationAgent(AsynchronousValueIterationAgent):
     """
