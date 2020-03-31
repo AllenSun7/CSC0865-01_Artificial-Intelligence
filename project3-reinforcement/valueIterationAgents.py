@@ -64,15 +64,14 @@ class ValueIterationAgent(ValueEstimationAgent):
         "*** YOUR CODE HERE ***"
         for _ in range(self.iterations):
             #update values every iteration
-            iteration_values = self.values.copy()
+            iteration_values = copy.deepcopy(self.values)
             for state in self.mdp.getStates():
                 # skip if it is the terminal state
                 if self.mdp.isTerminal(state):
                     continue
                 # max V(s) = max_{a in actions} Q(s,a)
                 q_values = self.q_values(state)
-                max_q_value = max(q_values.values())
-                iteration_values[state] = max_q_value
+                iteration_values[state] = q_values[q_values.argMax()]
             self.values = iteration_values
         
     def getValue(self, state):
@@ -113,14 +112,16 @@ class ValueIterationAgent(ValueEstimationAgent):
         if len(q_values) == 0:
             return None
         else :
-            return max(q_values, key=q_values.get)
+            # return max(q_values, key=q_values.get)
+            return q_values.argMax()
         # util.raiseNotDefined()
 
+    # return all Q-values of a state as a util.Conter
     def q_values(self, state):
         """
         return a dictonary of q_values with corresponding Q-values and actions
         """
-        q_values = {}
+        q_values = util.Counter()
         for action in self.mdp.getPossibleActions(state):
             q_values[action] = self.getQValue(state, action)
         return q_values
@@ -166,11 +167,11 @@ class AsynchronousValueIterationAgent(ValueIterationAgent):
     def runValueIteration(self):
         "*** YOUR CODE HERE ***"
 
+        states = self.mdp.getStates()
         for i in range(self.iterations):
             #update value of certain state 
-            states = self.mdp.getStates()
             #cycle state
-            state = states[i%len(states)]
+            state = states[i % len(states)]
             # skip if it is the terminal state
             if self.mdp.isTerminal(state):
                 continue
@@ -178,8 +179,7 @@ class AsynchronousValueIterationAgent(ValueIterationAgent):
             q_values = {}
             for action in self.mdp.getPossibleActions(state):
                 q_values[action] = self.getQValue(state, action)
-            max_q_value = max(q_values.values())
-            self.values[state] = max_q_value
+            self.values[state] = max(q_values.values())
     
 
 class PrioritizedSweepingValueIterationAgent(AsynchronousValueIterationAgent):
@@ -201,4 +201,52 @@ class PrioritizedSweepingValueIterationAgent(AsynchronousValueIterationAgent):
 
     def runValueIteration(self):
         "*** YOUR CODE HERE ***"
+        # Initialize an empty priority queue
+        p_queue = util.PriorityQueue()
+        # Initialize an empty util.Counter to store states and their predecesoors
+        p_states = util.Counter()
+        for state in self.mdp.getStates():
+            if not self.mdp.isTerminal(state):
+                p_states[state] = set()
+        # copy values for updating the Q-Value of states in p_states
+        p_values = copy.deepcopy(self.values)
+                
+        # Compute predecessors of all states.
+        for p_state in p_states.keys():
+            for action in self.mdp.getPossibleActions(p_state):
+                for s_state, _ in self.mdp.getTransitionStatesAndProbs(p_state, action):
+                    # print("next_states")
+                    # print(next_states)
+                    if not self.mdp.isTerminal(s_state):
+                        p_states[s_state].add(p_state)
+
+        def _update_queue(state, theta=-1.0):
+            """
+            update p_queue
+            only update p_queue when diff > theta
+            # In ValuesIterationAgent, we define the q_values(self, state)
+            # return all Q-values of a state as a util.Conter
+            """
+            # get highest Q-values
+            q_values = self.q_values(state)
+            q_value = q_values[q_values.argMax()]
+            diff = abs(q_value - self.values[state])
+            if diff > theta:
+                p_values[state] = q_value
+                p_queue.update(state, -diff)
+
+        # update p_queue with states for first time
+        for state in p_states.keys():
+            _update_queue(state)
+         
+        # Interation and update state values
+        for i in range(self.iterations):
+            if p_queue.isEmpty():
+                break
+            else:
+                state = p_queue.pop()
+                # update values
+                self.values[state] = p_values[state]
+                for p_state in p_states[state]:
+                    _update_queue(p_state, theta=self.theta)
 
