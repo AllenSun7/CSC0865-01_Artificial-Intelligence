@@ -2,19 +2,27 @@
 
 Notes and assignments of the course CSC 0665-01 Artificial Intelligence Spring at SFSU
 
-## **[assignment0_Unix-Python-Tutorial](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/assignment0_Unix-Python-Tutorial/tutorial)**
+## Assignments
+
+### **[assignment0_Unix-Python-Tutorial](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/assignment0_Unix-Python-Tutorial/tutorial)**
 
 `
     Provisional grades
+
     ==================
+
     Question q1: 1/1
+
     Question q2: 1/1
+
     Question q3: 1/1
+
     ------------------
+
     Total: 3/3
 `
 
-## **[project1-search](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project1-search)**
+### **[project1-search](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project1-search)**
 
 `
     Provisional grades
@@ -31,7 +39,7 @@ Notes and assignments of the course CSC 0665-01 Artificial Intelligence Spring a
     Total: 26/25
 `
 
-## **[project2-multiagent](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project2-multiagent)**
+### **[project2-multiagent](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project2-multiagent)**
 
 `
     Provisional grades
@@ -45,7 +53,7 @@ Notes and assignments of the course CSC 0665-01 Artificial Intelligence Spring a
     Total: 25/25
 `
 
-## **[project3-reinforcement](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project3-reinforcement)**
+### **[project3-reinforcement](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project3-reinforcement)**
 
 `
     Provisional grades
@@ -64,7 +72,7 @@ Notes and assignments of the course CSC 0665-01 Artificial Intelligence Spring a
     Total: 25/25
 `
 
-## **[project5-MachineLearning](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project5-MachineLearning)**
+### **[project5-MachineLearning](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project5-MachineLearning)**
 
 `
     Provisional grades
