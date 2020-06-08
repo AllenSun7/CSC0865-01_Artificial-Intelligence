@@ -43,17 +43,15 @@ Notes and assignments of the course CSC 0665-01 Artificial Intelligence Spring a
 ### **[project2-multiagent](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project2-multiagent)**
 
 `
-
-    Provisional grades<br/>
-    ==================<br/>
-    Question q1: 4/4<br/>
-    Question q2: 5/5<br/>
-    Question q3: 5/5<br/>
-    Question q4: 5/5<br/>
-    Question q5: 6/6<br/>
-    ------------------<br/>
-    Total: 25/25<br/>
-    
+    Provisional grades <br/>
+    ================== <br/>
+    Question q1: 4/4 <br/>
+    Question q2: 5/5 <br/>
+    Question q3: 5/5 <br/>
+    Question q4: 5/5 <br/>
+    Question q5: 6/6 <br/>
+    ------------------ <br/>
+    Total: 25/25 <br/>
 `
 
 ### **[project3-reinforcement](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project3-reinforcement)**
