@@ -75,11 +75,11 @@ Notes and assignments of the course CSC 0665-01 Artificial Intelligence Spring a
 
 ### **[project5-MachineLearning](https://github.com/AllenSun7/CSC0865-01_Artificial-Intelligence/tree/master/project5-MachineLearning)**
 
-    Provisional grades\
-    ==================\
-    Question q1: 6/6\
-    Question q2: 6/6\
-    Question q3: 6/6\
-    Question q4: 0/7\
-    ------------------\
+    Provisional grades
+    ==================
+    Question q1: 6/6
+    Question q2: 6/6
+    Question q3: 6/6
+    Question q4: 0/7
+    ------------------
     Total: 18/25
