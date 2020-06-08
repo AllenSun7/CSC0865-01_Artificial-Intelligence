@@ -1,6 +1,6 @@
-# CSC 0665-01 Artificial Intelligence Spring
+# CSC 0665-01 Artificial Intelligence
 
-Notes and assignments of the course CSC 0665-01 Artificial Intelligence Spring at SFSU
+Notes and assignments of the course CSC 0665-01 Artificial Intelligence at SFSU
 
 ### Assignments
 
